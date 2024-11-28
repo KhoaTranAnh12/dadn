@@ -9,8 +9,9 @@ from firebase_admin import db,credentials
 from firebase_admin import firestore
 cred = credentials.Certificate("dadn-241-firebase-adminsdk-6ql6y-0b6819c9a9.json")
 firebase_admin.initialize_app(cred, {"databaseURL":"https://dadn-241-default-rtdb.asia-southeast1.firebasedatabase.app/"})
-
+from flask_cors import CORS
 app = Flask(__name__)
+CORS(app)
 from Adafruit_IO import Client,Feed
 aio = Client("Binhphan1447", "aio_SiwX01Z1biZ3Ky6lgkbqDgdICWkt")
 import models.users as User
