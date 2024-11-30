@@ -13,7 +13,7 @@ from flask_cors import CORS
 app = Flask(__name__)
 CORS(app)
 from Adafruit_IO import Client,Feed
-aio = Client("Binhphan1447", "aio_SiwX01Z1biZ3Ky6lgkbqDgdICWkt")
+aio = Client("Binhphan1447", "aio_HVMe06MWPZa389qNEosYAcixMjdR")
 import models.users as User
 @app.route('/users', methods=['GET'])
 def user_getUsers():#Done
