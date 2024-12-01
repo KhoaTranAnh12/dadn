@@ -13,24 +13,27 @@ from flask_cors import CORS
 app = Flask(__name__)
 CORS(app)
 from Adafruit_IO import Client,Feed
-aio = Client("Binhphan1447", "aio_xCZH123V0tfRUaQps3s3Y5t1x7ZU")
+aio = Client("Binhphan1447", "aio_eeAx45ZzRcTFou9NI7RRJl5ARCsT")
 import models.users as User
 @app.route('/users', methods=['GET'])
 def user_getUsers():#Done
-    username = request.args.get('username')
     auth = request.headers.get('Authorization')
     AuthenticatedUsername = checkUsingAuth(db,auth)
     if not AuthenticatedUsername: return {"error": "Auth failed", "status": 401}
-    if username == None:
-        res = User.User.getAllUsers(db)
-        if "error" in res.keys():
-            return {"error": res["error"], "status": 404}
-        return {"users": res["users"], "status": 200}
-    else:
-        res = User.User.getUserInfo(db,username)
-        if "error" in res.keys():
-            return {"error": res["error"], "status": 404}
-        return {"user": res["user"], "status": 200}
+    res = User.User.getAllUsers(db)
+    if "error" in res.keys():
+        return {"error": res["error"], "status": 404}
+    return {"users": res["users"], "status": 200}
+@app.route('/users', methods=['POST'])
+def user_getUsersInfo():
+    username = request.get_json()['username']
+    auth = request.headers.get('Authorization')
+    AuthenticatedUsername = checkUsingAuth(db,auth)
+    if not AuthenticatedUsername: return {"error": "Auth failed", "status": 401}
+    res = User.User.getUserInfo(db,username)
+    if "error" in res.keys():
+        return {"error": res["error"], "status": 404}
+    return {"user": res["user"], "status": 200}
 
 @app.route('/users/register', methods=['POST'])
 def user_createUser():#Done
@@ -228,9 +231,9 @@ def device_deleteDevice():
             return {"error": res["error"], "status": 404}
     return {"response": res["status"], "status": 200}
 
-@app.route('/devices/logs', methods=['GET'])
+@app.route('/devices/logs', methods=['POST'])
 def device_getLogs():
-    feedname = request.args.get('feedname')
+    feedname = request.get_json()['feedname']
     auth = request.headers.get('Authorization')
     AuthenticatedUsername = checkUsingAuth(db,auth)
     if not AuthenticatedUsername: return {"error": "Auth failed", "status": 401}
@@ -241,4 +244,5 @@ def device_getLogs():
     return {"response": res["logs"], "status": 200}
 if __name__ == '__main__':
     app.run(debug=True)
+    
     
